@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/Notepad.ico</file>
+        <file>images/Notepad.png</file>
+        <file>images/Open.ico</file>
+        <file>images/Open.png</file>
+        <file>images/Save.ico</file>
+        <file>images/Save.png</file>
+    </qresource>
+</RCC>
