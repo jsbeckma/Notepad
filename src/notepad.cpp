@@ -1,5 +1,6 @@
 #include "notepad.h"
 #include "ui_notepad.h"
+//#include "3rdparty/NotepadLib/include/notepadlib.h"
 
 #include <QFileDialog>
 #include <QFile>
@@ -11,6 +12,8 @@ Notepad::Notepad(QWidget *parent) :
     ui(new Ui::Notepad)
 {
     ui->setupUi(this);
+    //NotepadLib nl;
+    //QMessageBox::critical(this, tr("NotepadLib"), tr("from notepadlib: %1").arg(nl.getMessage()));
 }
 
 Notepad::~Notepad()

@@ -1,0 +1,39 @@
+#!/usr/bin/make -f
+all: Notepad.dmg
+Notepad.dmg: ORIG_DMG = $(APPLICATION)
+Notepad.dmg: MOD_DMG = $(APPLICATION)RW
+Notepad.dmg: ATTACH_PATH = /Volumes/$(APPLICATION)
+Notepad.dmg: Notepad.app omcbuild
+	echo "removing any previous dmgs"
+	rm -f $(APPLICATION)*.dmg
+	echo "starting macdeployqt"
+	macdeployqt $(APPLICATION).app -dmg -codesign="Developer ID Application: OTHER MACHINE COMPANY"
+	echo "done with macdeployqt"
+	hdiutil convert -format UDRW $(ORIG_DMG).dmg -o $(MOD_DMG).dmg
+	hdiutil attach -readwrite -noverify -noautoopen $(MOD_DMG).dmg
+	mkdir $(ATTACH_PATH)/.background
+	cp -f omcbuild/dmg/OMC_dmgbackground.png $(ATTACH_PATH)/.background
+	cp -f omcbuild/dmg/OMCCustomIcon.icns $(ATTACH_PATH)/.VolumeIcon.icns
+	cp -f omcbuild/dmg/DS_STORE $(ATTACH_PATH)/.DS_STORE
+	ln -s /Applications $(ATTACH_PATH)
+	SetFile -a C $(ATTACH_PATH)
+	hdiutil detach $(ATTACH_PATH)
+	hdiutil resize -sectors min $(MOD_DMG).dmg
+	hdiutil convert -format UDZO -imagekey zlib-level=9 $(MOD_DMG).dmg -o $(ORIG_DMG)_final.dmg
+	hdiutil unflatten $(ORIG_DMG)_final.dmg
+	Rez -a omcbuild/dmg/sla.r -o $(ORIG_DMG)_final.dmg
+	hdiutil flatten $(ORIG_DMG)_final.dmg
+	mv $(ORIG_DMG).dmg $(ORIG_DMG).dmg.bak
+	mv $(ORIG_DMG)_final.dmg $(ORIG_DMG).dmg
+	rm -f $(MOD_DMG).dmg
+	
+omcbuild:
+	if [ -d omcbuild ]; then \
+	   @echo "omcbuild project exists, new changes will be pulled down"; \
+	   cd omcbuild; \
+	   git pull; \
+	else \
+	   @echo "omcbuild doesn't exist, cloning it from git"; \
+	   git clone git@github.com:omco/omcbuild.git; \
+	fi
+
