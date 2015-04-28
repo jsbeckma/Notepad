@@ -117,6 +117,6 @@ macx {
 
 
 # Extra targets appended below
-PRE_TARGETDEPS += foo
-QMAKE_EXTRA_TARGETS += foo
-foo.commands = @echo Building ... $$TARGET as an $$TEMPLATE with config: $$CONFIG
+#PRE_TARGETDEPS += foo
+#QMAKE_EXTRA_TARGETS += foo
+#foo.commands = @echo Building ... $$TARGET as an $$TEMPLATE with config: $$CONFIG
