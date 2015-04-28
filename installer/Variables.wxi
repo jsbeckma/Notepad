@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Include>
+  <?define MajorVersion = "1" ?>
+  <?define MinorVersion = "0" ?>
+  <?define PatchVersion = "0" ?>
+  
+  <?define VersionNumber = "$(var.MajorVersion).$(var.MinorVersion).$(var.PatchVersion)" ?>
+  
+  <?define ExeName = "Notepad.exe" ?> 
+  <?define ProductName = "Notepad" ?>
+  
+  <!-- setup variables based on 32-bit or 64-bit systems -->
+  <?if $(sys.BUILDARCH) = "x64" ?>
+    <?define ProductName = "$(ProductName) (64 bit)" ?>
+    <?define Win64 = "yes" ?>
+    <?define MinimumInstallerVersion = "200" ?>
+    <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+    <?define ProductId = "C99EBC59-31EC-4642-8C51-AF9A0FA55D46" ?>
+    <?define UpgradeCode = "26B43B35-38FE-4735-92F0-5F478BF24A6A" ?>
+  <?elseif $(sys.BUILDARCH) = "x86" ?>
+    <?define ProductName = "$(ProductName)" ?>
+    <?define Win64 = "no" ?>
+    <?define MinimumInstallerVersion = "100" ?>
+    <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+    <?define ProductId = "97643120-CC30-4D5C-B0B8-6C3B722FEEB2" ?>
+    <?define UpgradeCode = "B39299A7-CA25-4898-B655-2953ECCEC501" ?>
+  <?else ?>
+    <?error Unsupported value of sys.BUILDARCH = $(sys.BUILDARCH) ?>
+  <?endif ?>
+</Include>

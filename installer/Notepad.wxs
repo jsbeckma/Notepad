@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?include Variables.wxi ?>
+
+  <Product Name="$(var.ProductName) $(var.VersionNumber)" Id="$(var.ProductId)" UpgradeCode="$(var.UpgradeCode)" Language="1033" Codepage="1252" Version="$(var.VersionNumber)" Manufacturer="Acme Co.">	
+    
+    <Package Id="*" Keywords="Installer" Description="$(var.ProductName) $(var.VersionNumber) Installer" Comments="WTFBBQ" Manufacturer="Acme Apex Company" InstallerVersion="$(var.MinimumInstallerVersion)" Languages="1033" Compressed="yes" SummaryCodepage="1252"/>
+    
+    <Media Id="1" Cabinet="Notepad.cab" EmbedCab="yes" DiskPrompt="CD-ROM #1"/>
+    <!-- Only allow installation on a 64-bit Windows system -->
+    <Condition Message="This application only runs on 64-bit Windows.">VersionNT64</Condition>
+    <Property Id="DiskPrompt" Value="Acme Apex's Notepad 1.0 Installation [1]"/>
+    <Property Id="INSTALLLOCATION">
+      <RegistrySearch Id="RegistrySearch" Type="raw" Root="HKLM" Win64="$(var.Win64)" Key="Software\[Manufacturer]\[ProductName]" Name="InstallLocation"/>
+    </Property>
+    
+    <Directory Id="TARGETDIR" Name="SourceDir">	
+      <Directory Id="$(var.PlatformProgramFilesFolder)" Name="PFiles">
+        <Directory Id="AcmeApexCo" Name="Acme Apex Co.">
+          <Directory Id="INSTALLLOCATION" Name="$(var.ProductName) $(var.VersionNumber)">
+            
+            <Component Id="MainExecutable" Guid="94608E73-551C-4457-B469-B71B02E7C86B">
+              <File Id="NotepadEXE" Name="$(var.ExeName)" DiskId="1" Source="$(var.ExeName)" KeyPath="yes">
+                <Shortcut Id="startmenuNotepad" Directory="ProgramMenuDir" Name="$(var.ProductName) $(var.VersionNumber)" WorkingDirectory="INSTALLLOCATION" Icon="NotepadIcon.ico" IconIndex="0" Advertise="yes"/>
+                <Shortcut Id="desktopNotepad" Directory="DesktopFolder" Name="Notepad 1.0" WorkingDirectory="INSTALLLOCATION" Icon="NotepadIcon.ico" IconIndex="0" Advertise="yes"/>
+              </File>
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>   
+      
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="Notepad 1.0">
+          <Component Id="ProgramMenuDir" Guid="6eda51b2-657e-4261-9ae5-0ce8914c8bf0">
+            <RemoveFolder Id="ProgramMenuDir" On="uninstall"/>
+            <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Type="string" Value="" KeyPath="yes"/>
+          </Component>
+        </Directory>
+      </Directory>
+          
+      <Directory Id="DesktopFolder" Name="Desktop"/>
+    </Directory>
+   
+    <Feature Id="Complete" Title="Notepad 1.0" Description="The complete package" Display="expand" ConfigurableDirectory="INSTALLLOCATION" Level="1">
+      <ComponentRef Id="MainExecutable"/>
+      <ComponentGroupRef Id="QtDLLs"/>
+      <ComponentRef Id="ProgramMenuDir"/>
+    </Feature>
+    
+    <UIRef Id="WixUI_InstallDir"/>
+    <UIRef Id="WixUI_ErrorProgressText"/>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION"/>
+    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Yes.  The answer is yes, it is awesome."/>
+    
+    <!-- Modify the default installation package with the following -->
+    <WixVariable Id="WixUILicenseRtf" Value="license\License.rtf"/>
+    <WixVariable Id="WixUIBannerBmp" Value="icons\banner.bmp"/>
+    <WixVariable Id="WixUIDialogBmp" Value="icons\dialog.bmp"/>
+    <WixVariable Id="WixUIExclamationIco" Value="icons\heavenly.ico"/>
+    <WixVariable Id="WixUIInfoIco" Value="icons\questionMark.ico"/>
+    
+    <Icon Id="NotepadIcon.ico" SourceFile="icons\Notepad-Icon.ico"/>
+    <!-- add an icon that will show up in the Add/Remove Programs dialog -->
+    <Property Id="ARPPRODUCTION" Value="NotepadIcon.ico"/>
+  </Product>
+</Wix>
