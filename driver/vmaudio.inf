@@ -11,7 +11,7 @@ Signature="$Windows NT$"
 Class=MEDIA
 ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
 provider=%VMWARE%
-DriverVer =12/29/2005,5.10.0.3500
+DriverVer =12/29/2014,5.10.0.3500
 CatalogFile = vmaudio.cat
 
 [Manufacturer]
